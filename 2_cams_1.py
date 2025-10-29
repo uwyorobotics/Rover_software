@@ -14,7 +14,7 @@ except:
     exit()
 
 try:
-    right_camera = cv2.VideoCapture(1)
+    right_camera = cv2.VideoCapture(2)
 except:
     print(f' couldnt open camera 1')
     exit()
