@@ -1,0 +1,13 @@
+sudo apt update
+sudo apt install build-essential
+
+gcc -Wall -Wextra -O2 \
+    main.c ak_motor.c can_driver.c \
+    -o ak_test \
+    -lpthread
+
+sudo ip link set can0 down
+sudo ip link set can0 type can bitrate 1000000
+sudo ip link set can0 up
+
+sudo ./ak_test
