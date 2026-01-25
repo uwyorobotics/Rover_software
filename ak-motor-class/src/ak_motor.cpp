@@ -42,7 +42,7 @@ void comm_can_set_pos(uint8_t controller_id, float pos) {
 
 */
 
-void ak_motor_check(CanDriver& driver, int can_id) {
+int ak_motor_check(CanDriver& driver, int can_id) {
     //check that the can id is found on the canbus?
     return 1;
 
