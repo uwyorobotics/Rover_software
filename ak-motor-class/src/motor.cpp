@@ -1,5 +1,4 @@
-#pragma once
-#include "CanDriver.h"
+#include "can_control.h"
 #include "ak_motor.h" // Your AK motor functions
 
 class Motor {

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "CanDriver.hpp"
-#include "Motor.hpp"
+#include "can_control.h"
+#include "motor.h"
 
 int main() {
     // Initialize CAN interface

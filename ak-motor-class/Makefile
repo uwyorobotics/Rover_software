@@ -1,18 +1,20 @@
-CC = gcc
-CFLAGS = -Iinclude -Wall -Wextra
-SRC = src/main.c src/motor.c src/ak_motor.c
-OBJ = $(SRC:.c=.o)
+CXX = g++
+CXXFLAGS = -Iinclude -Wall -Wextra
+
+SRC = src/main.cpp src/motor.cpp src/ak_motor.cpp
+OBJ = $(SRC:.cpp=.o)
 TARGET = motor_control
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $^
+	$(CXX) $(OBJ) -o $(TARGET)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ) $(TARGET)
 
 .PHONY: all clean
+
