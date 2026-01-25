@@ -1,5 +1,5 @@
 # ak-motor-class
-
+**all chat generated
 ## Overview
 The ak-motor-class project provides a structured way to control motors using a class-based approach in C. It encapsulates motor control functionality, making it easier to manage multiple motors in an application.
 
