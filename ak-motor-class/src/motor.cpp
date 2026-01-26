@@ -16,7 +16,7 @@ public:
     // Start the motor
     void start() {
         if (!is_running) {
-            ak_motor_start(driver, can_id); // Assuming AK API uses CAN ID
+            ak_motor_check(can_driver, can_id); // Assuming AK API uses CAN ID
             is_running = true;
         }
     }
