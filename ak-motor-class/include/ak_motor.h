@@ -18,11 +18,17 @@ enum CAN_PACKET_ID {
  * Append a 32-bit integer to a buffer in big-endian order
  */
 inline void buffer_append_int32(uint8_t* buffer, int32_t value, int32_t* index) {
-    buffer[(*index)++] = (value >> 24) & 0xFF;
-    buffer[(*index)++] = (value >> 16) & 0xFF;
-    buffer[(*index)++] = (value >> 8)  & 0xFF;
-    buffer[(*index)++] = value & 0xFF;
+    buffer[(*index)++] = (value >> 24);
+    buffer[(*index)++] = (value >> 16);
+    buffer[(*index)++] = (value >> 8);
+    buffer[(*index)++] = value;
 }
+
+inline void buffer_append_int16(uint8_t* buffer, int16_t number, int16_t *index) {
+    buffer[(*index)++] = number >> 8;
+    buffer[(*index)++] = number;
+}
+
 
 // ===================== AK Motor API =====================
 
@@ -45,7 +51,7 @@ void ak_motor_stop(CanDriver& driver, int can_id);
  * Set motor speed (in electrical RPM)
  * @param driver  Reference to CanDriver
  * @param can_id  Motor CAN ID
- * @param speed   Desired speed in ERPM
+ * @param speed   Desired speed in ERPM (32 bits)
  */
 void ak_motor_set_speed(CanDriver& driver, int can_id, int speed);
 

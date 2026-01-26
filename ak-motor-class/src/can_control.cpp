@@ -61,6 +61,27 @@ int CanDriver::sendExt(uint32_t ext_id, const uint8_t* data, uint8_t len)
 
     return 0;
 }
+/* this function (sendExt) should have the same behavior as this function given in the documentation:
+void comm_can_transmit_eid(uint32_t id, const uint8_t *data, uint8_t len) {
+    uint8_t i=0;
+    if (len > 8) {
+        len = 8;
+    }
+    CanTxMsg TxMessage;
+    TxMessage.StdId = 0;
+    TxMessage.IDE = CAN_ID_EXT;
+    TxMessage.ExtId = id;
+    TxMessage.RTR = CAN_RTR_DATA;
+    TxMessage.DLC = len;
+    //memcpy(txmsg.data8, data, len);
+    for(i=0;i<len;i++)
+    TxMessage.Data[i]=data[i];
+    CAN_Transmit(CHASSIS_CAN, &TxMessage);
+}
+
+*/
+
+
 
 int CanDriver::sendStd(uint16_t std_id, const uint8_t* data, uint8_t len)
 {

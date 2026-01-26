@@ -59,7 +59,7 @@ void ak_motor_stop(CanDriver& driver, int can_id) { //set the speed of the motor
 
 void ak_motor_set_speed(CanDriver& driver, int can_id, int speed) { 
     //set the speed of the motor to be speed:
-    //What units is the speed given in? EPRM
+    //What units is the speed given in: EPRM  range from -100000-100000
     int32_t send_index = 0;
     uint8_t buffer[4];
     buffer_append_int32(buffer, (int32_t)speed, &send_index);
