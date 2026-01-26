@@ -13,7 +13,8 @@ nmcli dev set halow0 managed no
 
 /////////////////////////////////////////////////
 /Follow AlphaNet Instructions for bringing Halo link up. 
-/Will be different for pi 4a vs pi 3b
+curl -sL https://downloads.alfa.com.tw/raspbian/nrc7292_setup.sh.txt | bash -
+/next Will be different for pi 4a vs pi 3b
 
 /////////////////////////////////////////////////
 //bridge setup //////////////////////////////////
@@ -49,3 +50,4 @@ iface br0 inet static
 
 /then:
 sudo systemctl restart networking
+
