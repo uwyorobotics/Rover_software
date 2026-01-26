@@ -3,6 +3,7 @@
 
 //All of the above is assuming that the motor is in Servo Mode
 
+/*
 typedef enum {
     CAN_PACKET_SET_DUTY = 0, // Duty Cycle Mode
     CAN_PACKET_SET_CURRENT, // Current Loop Mode
@@ -19,8 +20,7 @@ inline void buffer_append_int32(uint8_t* buffer, int32_t value, int32_t* index) 
     buffer[(*index)++] = (value >> 8)  & 0xFF;
     buffer[(*index)++] = value & 0xFF;
 }
-
-
+*/
 
 //The speed value is of type int32, and the range is -100000-100000, representing -100000-100000 electrical RPM
 
