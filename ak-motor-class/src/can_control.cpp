@@ -11,6 +11,7 @@
 
 // ================= Constructor / Destructor =================
 
+
 CanDriver::CanDriver(const std::string& interface)
     : iface_name(interface), sock_fd(-1)
 {
