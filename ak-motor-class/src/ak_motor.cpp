@@ -3,6 +3,7 @@
 
 //All of the above is assuming that the motor is in Servo Mode
 
+/*
 typedef enum {
     CAN_PACKET_SET_DUTY = 0, // Duty Cycle Mode
     CAN_PACKET_SET_CURRENT, // Current Loop Mode
@@ -19,8 +20,7 @@ inline void buffer_append_int32(uint8_t* buffer, int32_t value, int32_t* index) 
     buffer[(*index)++] = (value >> 8)  & 0xFF;
     buffer[(*index)++] = value & 0xFF;
 }
-
-
+*/
 
 //The speed value is of type int32, and the range is -100000-100000, representing -100000-100000 electrical RPM
 
@@ -59,7 +59,7 @@ void ak_motor_stop(CanDriver& driver, int can_id) { //set the speed of the motor
 
 void ak_motor_set_speed(CanDriver& driver, int can_id, int speed) { 
     //set the speed of the motor to be speed:
-    //What units is the speed given in? EPRM
+    //What units is the speed given in: EPRM  range from -100000-100000
     int32_t send_index = 0;
     uint8_t buffer[4];
     buffer_append_int32(buffer, (int32_t)speed, &send_index);

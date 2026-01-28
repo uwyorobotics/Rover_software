@@ -9,7 +9,7 @@ public:
      * @param driver  Reference to a pre-initialized CanDriver
      * @param can_id  CAN ID of this motor
      */
-    Motor(CanDriver& driver, int can_id);
+    Motor(CanDriver& driver, int id);
 
     /**
      * Start the motor
