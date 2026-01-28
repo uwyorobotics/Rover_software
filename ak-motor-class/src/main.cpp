@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include "can_control.h"
 #include "motor.h"
 
@@ -7,7 +9,7 @@ int main() {
     CanDriver can("can0"); // Replace "can0" with your interface
 
     // Create a motor on CAN ID 1
-    Motor motor1(can, 1);
+    Motor motor1(can, 2);
 
     // Start the motor
     std::cout << "Starting motor..." << std::endl;
@@ -21,6 +23,10 @@ int main() {
     // Read and print current speed
     int current_speed = motor1.getSpeed();
     std::cout << "Current motor speed: " << current_speed << " ERPM" << std::endl;
+
+    //wait for 2 seconds
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
 
     //Stop the motor
     std::cout << "Stopping motor..." << std::endl;
