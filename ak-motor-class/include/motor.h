@@ -39,6 +39,8 @@ public:
      */
     bool running() const;
 
+    void incSpeed(int new_speed);
+
 private:
     CanDriver& can_driver;  // Reference to CAN interface
     int speed;              // Current speed in ERPM
