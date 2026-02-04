@@ -34,7 +34,7 @@ void Motor::setSpeed(int new_speed) {
 
 //Decrease Speed
 void Motor::dec(int decspeed) {
-    speed += decspeed;
+    speed -= decspeed;
     ak_motor_set_speed(can_driver, can_id, speed); // Set via AK API
 }
 // Get current speed
