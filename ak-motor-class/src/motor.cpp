@@ -32,6 +32,10 @@ void Motor::setSpeed(int new_speed) {
     ak_motor_set_speed(can_driver, can_id, speed); // Set via AK API
 }
 
+void Motor::incSpeed(int incValue){
+    speed += incValue;
+    ak_motor_set_speed(can_driver, can_id, speed);
+}
 // Get current speed
 int Motor::getSpeed() const {
     return speed;
