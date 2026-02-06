@@ -1,0 +1,29 @@
+#imports
+import time
+#using the library: https://github.com/neurobionics/TMotorCANControl
+from TMotorCANControl.TMotorManager_servo_can import TMotorManager_servo_can
+
+#instance the motors
+FrontLeftMotor = TMotorManager_servo_can(motor_type='AK10-9', motor_ID=1)
+#FrontRightMotor = TMotorManager_servo_can(motor_type='AK10-9', motor_ID=1)
+#BackLeftMotor = TMotorManager_servo_can(motor_type='AK10-9', motor_ID=2)
+#BackRightMotor = TMotorManager_servo_can(motor_type='AK10-9', motor_ID=3)
+
+#Node and totic definitions
+
+#max speed in radians per second
+speed = 10000
+
+
+def spinMotor(point):
+    radpersec = point
+    FrontLeftMotor.set_motor_velocity_radians_per_second(radpersec)
+    #FrontRightMotor.set_motor_velocity_radians_per_second(radpersec)
+    #BackLeftMotor.set_motor_velocity_radians_per_second(radpersec)
+    #BackRightMotor.set_motor_velocity_radians_per_second(radpersec)
+
+
+#run the code in an infinite loop
+spinMotor(1)
+wait(10)
+spinMotor(0)

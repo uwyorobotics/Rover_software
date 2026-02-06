@@ -41,6 +41,8 @@ public:
 
     void incSpeed(int new_speed);
 
+    void dec(int decspeed);
+
 private:
     CanDriver& can_driver;  // Reference to CAN interface
     int speed;              // Current speed in ERPM
