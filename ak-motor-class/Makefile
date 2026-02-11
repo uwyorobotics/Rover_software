@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -Iinclude -Wall -Wextra
 
-SRC = src/main.cpp src/motor.cpp src/ak_motor.cpp src/can_control.cpp
+SRC = src/two_main.cpp src/motor.cpp src/ak_motor.cpp src/can_control.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = motor_control
 
