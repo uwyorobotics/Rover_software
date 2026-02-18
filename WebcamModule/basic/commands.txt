@@ -1,0 +1,65 @@
+check camera exists:  ls /dev/ | grep video
+check USB_cam downloaded : ls /dev/ | grep video
+check openCV downloaded: sudo apt install ros-noetic-perception
+check ros environment properly sourced: terminal:gedit ~/.bashrc
+	make sure the line "source /opt/ros/noetic/seup.bash is in the file
+
+create the workspace
+in the working filder you want to be working in, make a directory called src (source)
+run a catkin make on the workspace
+Make sure the package is sourced right by using: source ~/<working directory name>/devel/setup.bash
+check the soucring by typing echo $ROS_PAcKAGe_PATH
+in the source folder:
+catkin_create_pkg ros_open_cv image_transport cv_bridge sensor_msgs rospy rosccp std_msgs
+this copies in the source code we need to run open cv. it also creates the subfolder ros_open_cv
+
+in that subfolder ros_open_cv...
+	make a directory to hold the python scripts we will write
+	mkdir Scripts
+go into the scripts folder
+
+this is wehre the fun begins:
+write the publisher program!
+:gedit cam_pub.py
+write the code to capture the images and publish them to a topic
+
+make the file into an excecuteable
+:chmod +x cam_pub.py
+
+create the subscriber node
+gedit cam_ub.py
+#i fucked up and clled it cam_sub.py instead of cam_sub.py (should really be cam_soda.py)
+
+drop back down a folder
+cd ..
+gedit CMakeLists.txt
+
+Change this:
+catkin_install_python(PROGRAMS
+	scripts/cam_pub.py#make this name to be script 1
+	scripts/cam_ub.py#majke this name to be script 2
+	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+go to the workspace folder and run a catkin make
+catkin_make
+
+in three new terminals, run the following 
+TERMINAL 1
+:roscore
+
+TERMINAL 2
+source ~/Desktop/ROSCam_OPencv/devel/setup.bash
+rosrun ROSCAm_OPencv cam_pub.py
+
+TERMINAL 3 
+source ~/Desktop/ROSCam_OPencv/devel/setup.bash
+rosrun  ROSCAm_OPencv cam_ub.py
+
+
+working terminal = ROSCam_OPencv
+
+
+
+
+
