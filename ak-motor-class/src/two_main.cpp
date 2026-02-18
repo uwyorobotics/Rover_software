@@ -14,7 +14,7 @@ int main() {
 
     //Create a motor on CAN ID 4
     
-    Motor motor4(can, 4);
+    Motor motor4(can, 1);
 
     // Start the motor
     std::cout << "Starting motor..." << std::endl;
@@ -28,7 +28,7 @@ int main() {
     motor4.setSpeed(test_speed);
 
     // Read and print current speed
-    int current_speed = motor1.getSpeed();
+    int current_speed = motor2.getSpeed();
     std::cout << "Current motor speed: " << current_speed << " ERPM" << std::endl;
 
     //wait for 2 seconds
