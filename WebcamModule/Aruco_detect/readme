@@ -1,0 +1,15 @@
+Testing the Aruco detect module
+
+camera Publisher (cam_pub) reads the camera and prints it to ROS Topic
+Camera Subscriber (cam_sub) Listens to the Image ROS topic, detects an Aruco Tag, and if it is detected, prints it onto a new ROS Topic
+Aruco_print Listens to the Aruco_tag Topic and prints it to the log file (Terminal)
+
+to run:
+
+source package:
+source ~/Desktop/Aruco_tag_detect/devel/setup.bash
+
+roscore
+rosrun Aruco_detect cam_pub.py
+rosrun Aruco_detect cam_ub.py
+rosrun Aruco_detect Aruco_print.py
