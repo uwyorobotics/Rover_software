@@ -9,19 +9,43 @@ int main() {
     CanDriver can("can0"); // Replace "can0" with your interface
 
     // Create a motor on CAN ID 1
-    Motor motor1(can, 2);
+    Motor f_left(can, 1);
+
+    // Create a motor on CAN ID 2
+    Motor f_right(can, 2);
+
+    // Create a motor on CAN ID 3
+    Motor b_left(can, 3);
+
+    //Create a motor on CAN ID 4
+    Motor b_right(can, 4);
 
     // Start the motor
     std::cout << "Starting motor..." << std::endl;
-    motor1.start();
+    f_left.start();
+    f_right.start();
+    b_left.start();
+    b_right.start();
 
     //Set motor speed
     int test_speed = 5000; // ERPM
     std::cout << "Setting speed to " << test_speed << " ERPM" << std::endl;
-    motor1.setSpeed(test_speed);
+    f_left.setSpeed(test_speed);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    f_left.stop();
+    f_right.setSpeed(test_speed);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    f_right.stop();
+    b_left.setSpeed(test_speed);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    b_left.stop();
+    b_right.setSpeed(test_speed);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    b_right.stop();
+
 
     // Read and print current speed
-    int current_speed = motor1.getSpeed();
+    int current_speed = f_left.getSpeed();
     std::cout << "Current motor speed: " << current_speed << " ERPM" << std::endl;
 
     //wait for 2 seconds
@@ -30,7 +54,6 @@ int main() {
 
     //Stop the motor
     std::cout << "Stopping motor..." << std::endl;
-    motor1.stop();
 
     std::cout << "Motor stopped successfully." << std::endl;
 
