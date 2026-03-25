@@ -59,13 +59,13 @@ int main() {
     Motor f_left(can, 1);
 
     // Create a motor on CAN ID 2
-    Motor f_right(can, 2);
+    Motor f_right(can, 4);
 
     // Create a motor on CAN ID 3
-    Motor b_left(can, 3);
+    Motor b_left(can, 2);
 
     //Create a motor on CAN ID 4
-    Motor b_right(can, 4);
+    Motor b_right(can, 3);
 
     // Start the motor
     std::cout << "Starting motor..." << std::endl;
@@ -111,8 +111,8 @@ int main() {
                 // SDL axis values are -32768 to 32767
                 float value = event.jaxis.value / 32767.0f;
 		 if(axis == 1){
-		     f_left.setSpeed(value*5000);
-		     b_left.setSpeed(value*5000);
+		     f_left.setSpeed(value*-5000);
+		     b_left.setSpeed(value*-5000);
 		 }else if (axis == 4){
 		     f_right.setSpeed(value*5000);
 		     b_right.setSpeed(value*5000);
