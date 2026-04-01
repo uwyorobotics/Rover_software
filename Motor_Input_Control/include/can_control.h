@@ -28,7 +28,4 @@ public:
 private:
     std::string iface_name; // e.g., "can0"
     int sock_fd;            // SocketCAN file descriptor
-
-    void init();       // Internal: setup CAN socket
-    void shutdown();   // Internal: close CAN socket
 };

@@ -1,0 +1,16 @@
+# Compiled object files
+*.o
+
+# Compiled binaries
+Motor_Input_Control/motor_control
+ak-motor-class/motor_control
+
+# Vim swap files
+*.swp
+*.swo
+*.swn
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo

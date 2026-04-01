@@ -26,21 +26,23 @@ void Motor::stop() {
     }
 }
 
-// Set motor speed
+// Set motor speed, clamped to the AK motor ERPM range [-100000, 100000]
 void Motor::setSpeed(int new_speed) {
+    const int ERPM_MAX =  100000;
+    const int ERPM_MIN = -100000;
+    if      (new_speed > ERPM_MAX) new_speed = ERPM_MAX;
+    else if (new_speed < ERPM_MIN) new_speed = ERPM_MIN;
     speed = new_speed;
-    ak_motor_set_speed(can_driver, can_id, speed); // Set via AK API
+    ak_motor_set_speed(can_driver, can_id, speed);
 }
 
 //Decrease Speed
-void Motor::dec(int decspeed) {
-    speed -= decspeed;
-    ak_motor_set_speed(can_driver, can_id, speed); // Set via AK API
+void Motor::decSpeed(int decValue) {
+    setSpeed(speed - decValue); // routes through clamping in setSpeed
 }
 //Increase Speed
-void Motor::incSpeed(int incValue){
-    speed += incValue;
-    ak_motor_set_speed(can_driver, can_id, speed);
+void Motor::incSpeed(int incValue) {
+    setSpeed(speed + incValue); // routes through clamping in setSpeed
 }
 // Get current speed
 int Motor::getSpeed() const {

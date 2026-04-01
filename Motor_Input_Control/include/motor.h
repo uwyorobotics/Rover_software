@@ -7,7 +7,7 @@ public:
     /**
      * Constructor
      * @param driver  Reference to a pre-initialized CanDriver
-     * @param can_id  CAN ID of this motor
+     * @param id      CAN ID of this motor (1-127)
      */
     Motor(CanDriver& driver, int id);
 
@@ -22,8 +22,8 @@ public:
     void stop();
 
     /**
-     * Set the motor speed
-     * @param new_speed  Speed in ERPM
+     * Set the motor speed, clamped to [-100000, 100000] ERPM
+     * @param new_speed  Desired speed in ERPM
      */
     void setSpeed(int new_speed);
 
@@ -39,9 +39,11 @@ public:
      */
     bool running() const;
 
-    void incSpeed(int new_speed);
+    /** Increase speed by incValue ERPM */
+    void incSpeed(int incValue);
 
-    void dec(int decspeed);
+    /** Decrease speed by decValue ERPM */
+    void decSpeed(int decValue);
 
 private:
     CanDriver& can_driver;  // Reference to CAN interface
