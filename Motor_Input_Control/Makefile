@@ -6,7 +6,9 @@ SRC = src/Main.cpp src/motor.cpp src/ak_motor.cpp src/can_control.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = motor_control
 
-all: $(TARGET)
+.PHONY: all clean $(TARGET)
+
+all: clean $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CXX) $(OBJ) -o $(TARGET) $(LDFLAGS)
@@ -16,5 +18,3 @@ $(TARGET): $(OBJ)
 
 clean:
 	rm -f $(OBJ) $(TARGET)
-
-.PHONY: all clean
