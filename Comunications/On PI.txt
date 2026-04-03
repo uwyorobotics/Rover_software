@@ -1,0 +1,53 @@
+On PI:
+
+//////////////////////////////////////////////////
+/////Prep (not sure what this does) //////////////
+
+sudo apt update
+sudo apt install -y bridge-utils
+
+sudo systemctl stop dnsmasq
+sudo systemctl stop hostapd
+
+nmcli dev set halow0 managed no
+
+/////////////////////////////////////////////////
+/Follow AlphaNet Instructions for bringing Halo link up. 
+curl -sL https://downloads.alfa.com.tw/raspbian/nrc7292_setup.sh.txt | bash -
+/next Will be different for pi 4a vs pi 3b
+
+/////////////////////////////////////////////////
+//bridge setup //////////////////////////////////
+
+/Create bridge
+sudo brctl addbr br0
+sudo brctl addif br0 eth0
+sudo brctl addif br0 halow0
+
+//Flush old Ips
+sudo ip addr flush dev eth0
+sudo ip addr flush dev halow0
+
+/assign ip to bridge
+sudo ip addr add 192.168.50.x/24 dev br0		//replace x with 1 or 2 for AP vs STA
+sudo ip link set br0 up
+
+/whatever this does:
+sudo ip link set br0 mtu 1400
+
+///////////////////////////////////////////////
+////////Make persistent ///////////////////////
+edit /etc/network/interfaces.d/br0
+
+"auto br0
+iface br0 inet static
+    address 192.168.50.X
+    netmask 255.255.255.0
+    bridge_ports eth0 halow0
+    bridge_stp off
+    bridge_fd 0"
+/replace x with with 1 or 2 for AP vs STA
+
+/then:
+sudo systemctl restart networking
+
