@@ -1,10 +1,25 @@
+//CPP headers
 #include <iostream>
 #include <chrono>
 #include <thread>
+//Writen By us
 #include "can_control.h"
 #include "motor.h"
-
+//joystick Library
 #include <SDL2/SDL.h>
+
+
+/*
+* Tank Drive axis mapping (Logitech controller):
+*   Axis 1  -> left  motors (up/down on left  stick)
+*   Axis 4  -> right motors (up/down on right stick)
+*
+* Other modes (for reference):
+*   Arcade Drive:  Axis 1 = speed, Axis 0 = direction
+*   Racing Drive:  Axis 5 = forward trigger, Axis 4 = reverse trigger, Axis 0 = steer
+*/
+
+
 
 SDL_Joystick* setup()
 {
@@ -53,6 +68,17 @@ SDL_Joystick* setup()
     return joystick;
 }
 
+void clean_exit(Motor& A, Motor& B, Motor& C, Motor& D, bool SDL_enabled=true, SDL_Joystick* joystick=nullptr) {
+    A.stop();
+    B.stop();
+    C.stop();
+    D.stop();
+    if (SDL_enabled){
+        SDL_JoystickClose(joystick);
+        SDL_Quit();
+    }
+}
+
 int main() {
     // Initialize CAN interface
     CanDriver can("can0");
@@ -75,23 +101,11 @@ int main() {
     if (!joystick)
     {
         std::cerr << "Joystick setup failed. Stopping motors and exiting." << std::endl;
-        f_left.stop();
-        f_right.stop();
-        b_left.stop();
-        b_right.stop();
+        clean_exit(f_left, f_right, b_left, b_right, false);
         return 1;
     }
 
-    /*
-     * Tank Drive axis mapping (Logitech controller):
-     *   Axis 1  -> left  motors (up/down on left  stick)
-     *   Axis 4  -> right motors (up/down on right stick)
-     *
-     * Other modes (for reference):
-     *   Arcade Drive:  Axis 1 = speed, Axis 0 = direction
-     *   Racing Drive:  Axis 5 = forward trigger, Axis 4 = reverse trigger, Axis 0 = steer
-     */
-
+    
     // Current target speeds — updated by events, re-sent every loop iteration
     // to prevent the motor controller's ~1 second safety timeout from cutting out.
     int speed_left  = 0;
@@ -146,14 +160,7 @@ int main() {
 
     // ── Clean shutdown ────────────────────────────────────────────────────
     std::cout << "Stopping motors..." << std::endl;
-    f_left.stop();
-    f_right.stop();
-    b_left.stop();
-    b_right.stop();
-
-    SDL_JoystickClose(joystick);
-    SDL_Quit();
+    clean_exit(f_left, f_right, b_left, b_right, true, joystick);
     std::cout << "Done." << std::endl;
-
     return 0;
 }
