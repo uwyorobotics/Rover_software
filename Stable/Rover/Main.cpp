@@ -22,21 +22,17 @@
 
 
 
-void clean_exit(Motor& A, Motor& B, Motor& C, Motor& D, bool SDL_enabled=true, SDL_Joystick* joystick=nullptr) {
+void clean_exit(Motor& A, Motor& B, Motor& C, Motor& D) {
     A.stop();
     B.stop();
     C.stop();
     D.stop();
-    if (SDL_enabled){
-        SDL_JoystickClose(joystick);
-        SDL_Quit();
-    }
 }
 
 void on_disconnect(Motor& A, Motor& B, Motor& C, Motor& D) {
     // Watchdog: TCP link dropped — safe stop immediately
     std::cerr << "[WATCHDOG] Base disconnected — stopping motors\n";
-    clean_exit(A, B, C, C, true, joystick);
+    clean_exit(A, B, C, D);
 }
 
 
@@ -68,8 +64,9 @@ int main() {
     int speed_right = 0;
 
     bool running = true;
-    //Still need to change this to listen to the TCP link
-    SDL_Event event;
+
+    //Needs to dump into an events queue?
+    comms.listen_loop()
 
     while (running)
     {
@@ -117,7 +114,7 @@ int main() {
 
     // ── Clean shutdown ────────────────────────────────────────────────────
     std::cout << "Stopping motors..." << std::endl;
-    clean_exit(f_left, f_right, b_left, b_right, true, joystick);
+    clean_exit(f_left, f_right, b_left, b_right);
     std::cout << "Done." << std::endl;
     return 0;
 }
