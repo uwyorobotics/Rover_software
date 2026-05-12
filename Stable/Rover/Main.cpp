@@ -21,52 +21,6 @@
 
 
 
-SDL_Joystick* setup()
-{
-    // Initialize SDL joystick subsystem only — no video device needed.
-    // Using SDL_INIT_VIDEO here causes "video device not found" errors on
-    // headless systems (SSH sessions, Pi without a monitor attached).
-    if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
-    {
-        std::cerr << "SDL could not initialize! SDL_Error: "
-                  << SDL_GetError() << std::endl;
-        return nullptr;
-    }
-
-    // Check for joysticks
-    int joystickCount = SDL_NumJoysticks();
-    if (joystickCount < 1)
-    {
-        std::cout << "No joystick detected. Please connect your Logitech controller."
-                  << std::endl;
-        SDL_Quit();
-        return nullptr;
-    }
-
-    // Open first joystick
-    SDL_Joystick* joystick = SDL_JoystickOpen(0);
-    if (!joystick)
-    {
-        std::cerr << "Failed to open joystick! SDL_Error: "
-                  << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return nullptr;
-    }
-
-    std::cout << "Detected controller: "
-              << SDL_JoystickName(joystick) << std::endl;
-
-    std::cout << "Number of axes: "
-              << SDL_JoystickNumAxes(joystick) << std::endl;
-
-    std::cout << "Number of buttons: "
-              << SDL_JoystickNumButtons(joystick) << std::endl;
-
-    std::cout << "Number of hats (D-pad): "
-              << SDL_JoystickNumHats(joystick) << std::endl;
-
-    return joystick;
-}
 
 void clean_exit(Motor& A, Motor& B, Motor& C, Motor& D, bool SDL_enabled=true, SDL_Joystick* joystick=nullptr) {
     A.stop();
@@ -78,6 +32,13 @@ void clean_exit(Motor& A, Motor& B, Motor& C, Motor& D, bool SDL_enabled=true, S
         SDL_Quit();
     }
 }
+
+void on_disconnect(Motor& A, Motor& B, Motor& C, Motor& D) {
+    // Watchdog: TCP link dropped — safe stop immediately
+    std::cerr << "[WATCHDOG] Base disconnected — stopping motors\n";
+    clean_exit(A, B, C, C, true, joystick);
+}
+
 
 int main() {
     // Initialize CAN interface
@@ -96,22 +57,18 @@ int main() {
     b_left.start();
     b_right.start();
 
-    // Set up joystick — exit cleanly if unavailable
-    SDL_Joystick* joystick = setup();
-    if (!joystick)
-    {
-        std::cerr << "Joystick setup failed. Stopping motors and exiting." << std::endl;
-        clean_exit(f_left, f_right, b_left, b_right, false);
-        return 1;
-    }
-
+    // Set up Listener to TCP port for joystick commands
+    RobotComms comms(9000, on_command, on_disconnect);
+    comms.start();
     
+
     // Current target speeds — updated by events, re-sent every loop iteration
     // to prevent the motor controller's ~1 second safety timeout from cutting out.
     int speed_left  = 0;
     int speed_right = 0;
 
     bool running = true;
+    //Still need to change this to listen to the TCP link
     SDL_Event event;
 
     while (running)

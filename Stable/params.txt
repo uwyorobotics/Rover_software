@@ -1,0 +1,25 @@
+To make sure the Base station and the Rover are listening and sending on the same ports, 
+the ports are all defined here:
+
+TCP ports:
+  Rover:
+    Listen (command receiver):  9000
+    Send    (status/telemetry): 9000  (same connection, reply on accepted socket)
+
+  Base Station:
+    Send    (command sender):   9000
+    Listen  (status/telemetry): 9000  (same connection, reads replies)
+
+UDP ports:
+  Rover:
+    Send (video stream):        9002  (stream_id + seq_num in packet header)
+
+  Base Station:
+    Listen (video receiver):    9002
+
+IP addressed:
+  Rover:
+    10.121.111.111 (Example)
+
+  Basestation:
+    10.121.111.111

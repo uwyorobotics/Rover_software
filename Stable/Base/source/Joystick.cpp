@@ -1,8 +1,17 @@
 //compile command required for this: g++ Joystick.cpp -o joystick `sdl2-config --cflags --libs`
 
-#include <SDL2/SDL.h>
+//System dependencies
 #include <iostream>
 #include <cmath>
+
+//joystick Library
+#include <SDL2/SDL.h>
+
+// Header
+#include "Joystick.h"
+
+
+
 
 SDL_Joystick* setup()
 {
