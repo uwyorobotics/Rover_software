@@ -5,6 +5,7 @@
 //Writen By us
 #include "can_control.h"
 #include "motor.h"
+#include "motor_group.hpp"
 //joystick Library
 #include <SDL2/SDL.h>
 
@@ -53,8 +54,16 @@ int main() {
     b_left.start();
     b_right.start();
 
+    MotorGroup motors(f_left, f_right, b_left, b_right);
+
     // Set up Listener to TCP port for joystick commands
-    RobotComms comms(9000, on_command, on_disconnect);
+    RobotComms comms(
+        9000,
+        motors,
+        [&]() { motors.stop_all(); },                              // on disconnect
+        [&](uint8_t id, uint8_t cam) { streams.open_stream(id, cam); },
+        [&](uint8_t id)              { streams.close_stream(id); }
+    );
     comms.start();
     
 
