@@ -7,6 +7,7 @@
 #include <chrono>
 #include <thread>
 
+//joystick lib
 #include <SDL2/SDL.h>
 
 //writen by us
@@ -17,26 +18,12 @@ int main() {
 
     // ── SDL / Joystick Setup ─────────────────────────────────────────────
 
-    if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
-        std::cerr << "SDL init failed: " << SDL_GetError() << "\n";
+    SDL_Joystick* joystick = setup();
+
+    if (!joystick){
+        std::cout << "No joystick found, exiting" << "\n";
         return 1;
     }
-
-    if (SDL_NumJoysticks() < 1) {
-        std::cerr << "No joystick detected\n";
-        return 1;
-    }
-
-    SDL_Joystick* joystick = SDL_JoystickOpen(0);
-
-    if (!joystick) {
-        std::cerr << "Failed to open joystick: "
-                  << SDL_GetError() << "\n";
-        return 1;
-    }
-
-    std::cout << "Joystick connected: "
-              << SDL_JoystickName(joystick) << "\n";
 
 
     // ── Connect to Rover ─────────────────────────────────────────────────

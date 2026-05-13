@@ -3,6 +3,7 @@ CXXFLAGS = -Iinclude -Wall -Wextra `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs`
 
 SRC = ./Main.cpp src/base_comms.cpp src/Joystick.cpp
+OBJ = $(SRC:.cpp=.o) 
 TARGET = baseStation
 
 .PHONY: all clean $(TARGET)

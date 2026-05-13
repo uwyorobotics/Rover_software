@@ -57,7 +57,8 @@ SDL_Joystick* setup()
     return joystick;
 }
 
-void run(SDL_Joystick* joystick)
+//void run(SDL_Joystick* joystick)
+void run()
 {
     bool running = true;
     SDL_Event event;
@@ -90,20 +91,20 @@ void run(SDL_Joystick* joystick)
                 std::cout << "Axis " << axis
                           << " moved to " << value << std::endl;
 
-                /*
-                Tank Drive:
-                    Axis 1  -> left motors (up/down)
-                    Axis 3  -> right motors (up/down)
+                
+                //Tank Drive:
+                //    Axis 1  -> left motors (up/down)
+                //    Axis 3  -> right motors (up/down)
 
-                Arcade Drive:
-                    Axis 1  -> speed
-                    Axis 0  -> direction
+                // Arcade Drive:
+                //     Axis 1  -> speed
+                //     Axis 0  -> direction
 
-                Racing Drive:
-                    Axis 5  -> forward (right trigger)
-                    Axis 4  -> reverse (left trigger)
-                    Axis 0  -> steering
-                */
+                // Racing Drive:
+                //     Axis 5  -> forward (right trigger)
+                //     Axis 4  -> reverse (left trigger)
+                //     Axis 0  -> steering
+                
             }
 
             
@@ -141,15 +142,17 @@ void run(SDL_Joystick* joystick)
     }
 }
 
-int main(int argc, char* argv[])
-{
-    SDL_Joystick* joystick = setup();
-    if (!joystick)
-        return 1;
 
-    run(joystick);
 
-    SDL_JoystickClose(joystick);
-    SDL_Quit();
-    return 0;
-}
+// int main()
+// {
+//     SDL_Joystick* joystick = setup();
+//     if (!joystick)
+//         return 1;
+
+//     run(joystick);
+
+//     SDL_JoystickClose(joystick);
+//     SDL_Quit();
+//     return 0;
+// }
