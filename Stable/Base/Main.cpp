@@ -6,8 +6,6 @@
 #include <chrono>
 #include <thread>
 //Writen By us
-#include "can_control.h"
-#include "motor.h"
 #include "base_comms.hpp"
 //joystick Library
 #include <SDL2/SDL.h>
@@ -15,14 +13,13 @@
 
 
 
-int Main(){
+int main(){
 
     //Setup listener to Joystick:
     SDL_Joystick* joystick = setup();
     if (!joystick)
     {
         std::cerr << "Joystick setup failed. Stopping motors and exiting." << std::endl;
-        clean_exit(f_left, f_right, b_left, b_right, false);
         return 1;
     }
 
