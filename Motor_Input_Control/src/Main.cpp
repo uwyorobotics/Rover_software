@@ -123,7 +123,7 @@ int main() {
             {
                 int   axis  = event.jaxis.axis;
                 float value = event.jaxis.value / 32767.0f;
-
+                std::cout << axis << ":" << value << std::endl;
                 if (axis == 1)
                 {
                     // Left stick up/down -> left motors (inverted: push forward = negative axis)

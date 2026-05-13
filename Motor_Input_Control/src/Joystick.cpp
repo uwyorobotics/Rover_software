@@ -58,10 +58,12 @@ void run(SDL_Joystick* joystick)
 
     while (running)
     {
+	std::cout << "Running" << std::endl;
         Uint32 frameStart = SDL_GetTicks();
 
         while (SDL_PollEvent(&event))
         {
+	std::cout << "polling Events" << std:: endl; 
             if (event.type == SDL_QUIT)
             {
                 running = false;
@@ -137,9 +139,9 @@ int main(int argc, char* argv[])
     SDL_Joystick* joystick = setup();
     if (!joystick)
         return 1;
-
+    std::cout << "Joystick OK" << std::endl;
     run(joystick);
-
+    std::cout << "closing" << std::endl;
     SDL_JoystickClose(joystick);
     SDL_Quit();
     return 0;
