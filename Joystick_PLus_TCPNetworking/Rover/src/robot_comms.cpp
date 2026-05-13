@@ -403,7 +403,7 @@ void RobotComms::handle_tank_drive(const uint8_t* payload, size_t payload_len) {
     // want to blow up a motor controller.
     left  = std::clamp(left,  static_cast<int16_t>(-5000), static_cast<int16_t>(5000));
     right = std::clamp(right, static_cast<int16_t>(-5000), static_cast<int16_t>(5000));
-
+    std::cout << left << " " << right << "\n";
     // Apply to motors.
     // Left side: f_left and b_left share the same speed (tank drive).
     // Right side: f_right and b_right share the same speed.
