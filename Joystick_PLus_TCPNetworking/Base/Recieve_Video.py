@@ -20,6 +20,8 @@ import queue
 import collections
 import cv2
 import gi
+import signal
+import numpy as np
 
 gi.require_version("Gst", "1.0")
 from gi.repository import Gst
@@ -208,8 +210,9 @@ class ReassemblerThread(threading.Thread):
 class GStreamerDecoder:
     DECODE_PIPELINE = (
         "appsrc name=src format=time is-live=true ! "
-        "h264parse ! "
-        "avdec_h264 ! "
+        "h264parse config-interval=-1 ! "
+        "video/x-h264,profile=baseline ! "   # <-- add this
+        "openh264dec ! "
         "videoconvert ! "
         "video/x-raw,format=BGR ! "
         "appsink name=sink emit-signals=true max-buffers=1 drop=true"
@@ -279,7 +282,6 @@ class GStreamerDecoder:
 
         result, mapinfo = buf.map(Gst.MapFlags.READ)
         if result:
-            import numpy as np
             frame = np.frombuffer(mapinfo.data, dtype=np.uint8).reshape(height, width, 3)
             buf.unmap(mapinfo)
 
@@ -358,7 +360,7 @@ class DisplayManager:
     def run(self):
         """Blocking loop — call from main thread."""
         print("[Display] Running — press 'q' in any window to quit")
-        import numpy as np
+
 
         while True:
             # Drain all available frames this tick
@@ -387,7 +389,6 @@ class DisplayManager:
 
     def _draw_overlay(self, stream_id: int, frame):
         """Stamp stream ID and live FPS onto the frame."""
-        import numpy as np
 
         # Track FPS with a rolling window of timestamps
         if stream_id not in self._fps_tracker:
@@ -409,7 +410,6 @@ class DisplayManager:
 # Entry point
 # ══════════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
-    import signal
 
     Gst.init(None)
 
