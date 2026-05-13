@@ -14,11 +14,25 @@ using DisconnectCallback = std::function<void()>;
 
 // Match this to whatever your implementation uses (usually an enum)
 enum class MsgType : uint8_t {
-    TANK_DRIVE = 0,
-    STOP = 1,
-    HEARTBEAT = 2,
-    ACK = 3, 
-    TELEMETRY = 4
+    // ── Rover → Base ──────────────────────────────────────────────────────
+    ACK         = 0x01,   // Rover acknowledged last command. No payload.
+    TELEMETRY   = 0x02,   // Rover status string (battery, pose, errors).
+                          // Payload: UTF-8 string, variable length.
+
+    // ── Base → Rover ──────────────────────────────────────────────────────
+    TANK_DRIVE  = 0x10,   // Set left/right motor speeds.
+                          // Payload: int16 left (BE), int16 right (BE). 4 bytes.
+
+    STOP        = 0x11,   // Stop all motors immediately. No payload.
+
+    HEARTBEAT   = 0x12,   // Keep-alive. Rover watchdog resets on receipt.
+                          // No payload. Send every 200–500ms.
+
+    VIDEO_START = 0x13,   // Start a video stream.
+                          // Payload: uint8 stream_id, uint8 cam_index. 2 bytes.
+
+    VIDEO_STOP  = 0x14,   // Stop a video stream.
+                          // Payload: uint8 stream_id. 1 byte.
 };
 
 class RobotComms {
