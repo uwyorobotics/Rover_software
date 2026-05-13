@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -Iinclude -Wall -Wextra `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs`
 
-SRC = Main.cpp source/base_comms.cpp source/Joystick.cpp
+SRC = ./Main.cpp src/base_comms.cpp src/Joystick.cpp
 TARGET = baseStation
 
 .PHONY: all clean $(TARGET)
