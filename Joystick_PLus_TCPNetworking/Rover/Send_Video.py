@@ -26,7 +26,7 @@ from gi.repository import Gst, GLib
 # These should match your params file exactly.
 # Replace with a real config loader (configparser, yaml, etc.) as needed.
 
-BASE_IP      = "192.168.1.100"   # Base station IP
+BASE_IP      = "10.121.186.78"   # Base station IP
 VIDEO_PORT   = 9002              # UDP port base is listening on
 
 # Video settings — tune to fit within your HaLow bandwidth budget
@@ -106,7 +106,9 @@ class GStreamerEncoder:
     JETSON_PIPELINE = (
         "appsrc name=src ! "
         "videoconvert ! "
-        "video/x-raw,format=I420 ! "
+        "video/x-raw,format=NV12 ! "
+        "nvvidconv ! "                                           # CPU → NVMM
+        "video/x-raw(memory:NVMM),format=NV12 ! "              # explicit NVMM caps
         f"nvv4l2h264enc bitrate={ENCODE_BITRATE} iframeinterval=30 ! "
         "h264parse ! "
         "video/x-h264,stream-format=byte-stream,alignment=nal ! "
@@ -119,7 +121,7 @@ class GStreamerEncoder:
         "video/x-raw,format=I420 ! "
         f"x264enc bitrate={ENCODE_BITRATE // 1000} tune=zerolatency key-int-max=30 ! "
         "h264parse ! "
-        "video/x-h264,stream-format=byte-stream,alignment=nal ! "
+        "video/x-h264,stream-format=byte-stream,alignment=nal,profile=baseline ! "
         "appsink name=sink emit-signals=true max-buffers=1 drop=true"
     )
 
@@ -369,7 +371,7 @@ if __name__ == "__main__":
 
     # Open stream 0 on camera 0 at startup.
     # In production this would be triggered by a VIDEO_START command from base.
-    manager.open_stream(stream_id=0, camera_index=0, use_jetson_encoder=True)
+    manager.open_stream(stream_id=0, camera_index=0, use_jetson_encoder=False)
 
     # Graceful shutdown on Ctrl+C
     def shutdown(sig, frame):
