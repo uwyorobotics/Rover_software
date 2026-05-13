@@ -2,10 +2,13 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+
+
 //Writen By us
 #include "can_control.h"
 #include "motor.h"
 #include "motor_group.hpp"
+#include "robot_comms.hpp"
 //joystick Library
 #include <SDL2/SDL.h>
 
@@ -36,15 +39,6 @@ void on_disconnect(Motor& A, Motor& B, Motor& C, Motor& D) {
     clean_exit(A, B, C, D);
 }
 
-#include <iostream>
-#include <thread>
-#include <chrono>
-
-#include "can_control.h"
-#include "motor.h"
-#include "motor_group.hpp"
-#include "robot_comms.hpp"
-
 int main() {
     // ── CAN setup ─────────────────────────────────────────────
     CanDriver can("can0");
@@ -61,29 +55,13 @@ int main() {
 
     MotorGroup motors(f_left, f_right, b_left, b_right);
 
-    // ── Optional stream manager ──────────────────────────────
-    StreamManager streams;
+
 
     // ── Robot communications ─────────────────────────────────
     RobotComms comms(
         9000,
         motors,
-
-        // disconnect callback
-        [&]() {
-            std::cerr << "[MAIN] Base disconnected\n";
-            motors.stop_all();
-        },
-
-        // video start callback
-        [&](uint8_t id, uint8_t cam) {
-            streams.open_stream(id, cam);
-        },
-
-        // video stop callback
-        [&](uint8_t id) {
-            streams.close_stream(id);
-        }
+        [&]() { motors.stop_all(); }
     );
 
     comms.start();

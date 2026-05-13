@@ -46,6 +46,8 @@
 // =============================================================================
 
 #include "robot_comms.hpp"
+#include "motor_group.hpp"
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -55,6 +57,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <chrono>
+#include <algorithm>
 
 
 // ── Constructor ───────────────────────────────────────────────────────────────
@@ -71,14 +74,11 @@
 
 RobotComms::RobotComms(uint16_t            cmd_port,
                        MotorGroup&         motors,
-                       DisconnectCallback  on_disconnect,
-                       VideoStartCallback  on_video_start,
-                       VideoStopCallback   on_video_stop)
+                       DisconnectCallback  on_disconnect)
     : cmd_port_(cmd_port)
     , motors_(motors)
     , on_disconnect_(std::move(on_disconnect))
-    , on_video_start_(std::move(on_video_start))
-    , on_video_stop_(std::move(on_video_stop))
+
 {}
 
 
@@ -341,13 +341,6 @@ void RobotComms::dispatch(int fd,
             handle_heartbeat();
             break;
 
-        case MsgType::VIDEO_START:
-            handle_video_start(payload, payload_len);
-            break;
-
-        case MsgType::VIDEO_STOP:
-            handle_video_stop(payload, payload_len);
-            break;
 
         default:
             // Unknown type — log it but don't drop the connection.
@@ -451,58 +444,6 @@ void RobotComms::handle_heartbeat() {
 }
 
 
-// ── handle_video_start() ─────────────────────────────────────────────────────
-//
-// Fires the on_video_start_ callback with stream_id and cam_index.
-// The callback is wired to StreamManager::open_stream() in main().
-//
-// Expected payload (2 bytes):
-//   Byte 0 : uint8_t stream_id   (identifies the stream on the UDP channel)
-//   Byte 1 : uint8_t cam_index   (which physical camera, e.g. /dev/video0)
-
-void RobotComms::handle_video_start(const uint8_t* payload, size_t payload_len) {
-    if (payload_len != 2) {
-        std::cerr << "[RobotComms] VIDEO_START: expected 2 bytes, got "
-                  << payload_len << " — ignoring\n";
-        return;
-    }
-
-    uint8_t stream_id  = payload[0];
-    uint8_t cam_index  = payload[1];
-
-    std::cout << "[RobotComms] VIDEO_START stream=" << (int)stream_id
-              << " cam=" << (int)cam_index << "\n";
-
-    if (on_video_start_) {
-        on_video_start_(stream_id, cam_index);
-    }
-}
-
-
-// ── handle_video_stop() ──────────────────────────────────────────────────────
-//
-// Fires the on_video_stop_ callback with stream_id.
-// The callback is wired to StreamManager::close_stream() in main().
-//
-// Expected payload (1 byte):
-//   Byte 0 : uint8_t stream_id
-
-void RobotComms::handle_video_stop(const uint8_t* payload, size_t payload_len) {
-    if (payload_len != 1) {
-        std::cerr << "[RobotComms] VIDEO_STOP: expected 1 byte, got "
-                  << payload_len << " — ignoring\n";
-        return;
-    }
-
-    uint8_t stream_id = payload[0];
-
-    std::cout << "[RobotComms] VIDEO_STOP stream=" << (int)stream_id << "\n";
-
-    if (on_video_stop_) {
-        on_video_stop_(stream_id);
-    }
-}
-
 
 // =============================================================================
 // PRIVATE — WATCHDOG
@@ -539,11 +480,11 @@ void RobotComms::watchdog_loop() {
 
         auto now     = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                           now - last_heartbeat_.load()).count();
+                           now - last_heartbeat_);
 
-        if (elapsed > WATCHDOG_TIMEOUT_MS) {
+        if (elapsed.count() > WATCHDOG_TIMEOUT_MS) {
             std::cerr << "[RobotComms] WATCHDOG: no heartbeat for "
-                      << elapsed << "ms — stopping motors\n";
+                      << elapsed.count() << "ms — stopping motors\n";
             motors_.stop_all();
             on_disconnect_();
 
